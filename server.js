@@ -25,7 +25,7 @@ const mimeType = {
 };
 
 const server = http.createServer((request, response) => {
-  console.log(`${request.method} ${request.url}`);
+  console.info(`${request.method} ${request.url}`);
 
   const parsedUrl = url.parse(request.url);
 
@@ -47,7 +47,7 @@ const server = http.createServer((request, response) => {
     }
   }
 
-  let pathname = path.join(__dirname, sanitizedPath);
+  let pathname = path.join(__dirname, 'public', sanitizedPath);
   
   if (!fs.existsSync(pathname)) {
     response.statusCode = 404;
@@ -84,8 +84,9 @@ const getBodyFromUrl = (res, site) => {
   try {
     https.get(site, response => {
       const { statusCode } = response;
-      console.log(`Status code: ${statusCode}`);
+      console.info(`Status code: ${statusCode}`);
       response.setEncoding('utf8');
+
       let data = '';
       response.on('data', chunk => {
         data += chunk;
@@ -94,7 +95,8 @@ const getBodyFromUrl = (res, site) => {
       response.on('end', () => {
         const body = data
           .substring(data.indexOf('<body'), data.lastIndexOf('</body>'))
-          .replace(/\<script[\s\S]*?\/script>/g, '');
+          .replace(/\<script[\s\S]*?\/script>/g, '')
+          .replace(/src="[\s\S]*?"/g, '');
 
         res.setHeader('Content-type', 'text/plain');
         res.end(body);
