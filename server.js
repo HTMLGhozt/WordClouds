@@ -10,6 +10,7 @@ const mimeType = {
   '.ico': 'image/x-icon',
   '.html': 'text/html',
   '.js': 'text/javascript',
+  '.mjs': 'text/javascript',
   '.json': 'application/json',
   '.css': 'text/css',
   '.png': 'image/png',
@@ -102,7 +103,7 @@ const getBodyFromUrl = (res, site) => {
   } catch (error) {
     console.error(site, error.message);
     res.statusCode = 500;
-    res.end(`Error getting ${site}`);
+    res.send(`Error getting ${site}`);
   }
 };
 
